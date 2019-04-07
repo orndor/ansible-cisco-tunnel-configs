@@ -4,6 +4,9 @@
     - name: "me_num"
       prompt: "Enter the ME number (e.g. 2)"
       private: no
+    - name: "mission_num"
+      prompt: "Enter the mission numer (e.g. WC-1000-19)"
+      private: no
     - name: "tunnel_num"
       prompt: "Enter Tunnel Number (e.g. 96780)"
       private: no
@@ -14,7 +17,7 @@
       prompt: "Enter Tunnel Subnet Mask"
       private: no
     - name: "nhrp_auth"
-      prompt: "Enter IP NHRP Authenticatio(e.g. 22196780)"
+      prompt: "Enter IP NHRP Authentication (e.g. 22196780)"
       private: no
     - name: "nhrp_id"
       prompt: "Enter NHRP ID (e.g 96780)"
@@ -31,7 +34,7 @@
       ios_config:
         lines:
           - "interface Tunnel{{ tunnel_num }}"
-          - "description DMVPN Tunnel to Unit"
+          - "description DMVPN Tunnel for {{ mission_num }}"
           - "bandwidth 6144"
           - "ip address {{ tunnel_ip }} {{ tunnel_mask }}"
           - "no ip redirects"

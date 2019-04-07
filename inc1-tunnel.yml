@@ -5,7 +5,7 @@
       prompt: "Enter the ME number (e.g. 2)"
       private: no
     - name: "mission_num"
-      prompt: "Enter the mission numer (e.g. WC-1000-19)"
+      prompt: "Enter the mission number (e.g. WC-1000-19)"
       private: no
     - name: "tunnel_num"
       prompt: "Enter Tunnel Number (e.g. 96780)"

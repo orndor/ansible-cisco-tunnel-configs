@@ -20,10 +20,7 @@
       prompt: "Enter IP NHRP Authentication (e.g. 22196780)"
       private: no
     - name: "nhrp_id"
-      prompt: "Enter NHRP ID (e.g 96780)"
-      private: no
-    - name: "tunnel_key"
-      prompt: "Enter Tunnel Key (e.g 96780)"
+      prompt: "Enter NHRP ID and Tunnel Key (e.g 96780)"
       private: no
     - name: "tunnel_source"
       prompt: "Enter RHN Tunnel Source IP"
@@ -59,5 +56,6 @@
           - "ospfv3 2 cost 12400"
           - "ospfv3 2 area 0 ipv4"
           - "tunnel source {{ tunnel_source }}"
+          - "tunnel key {{ nhrp_id }}"
           - "tunnel mode gre multipoint"
           - "tunnel protection ipsec profile colorless"

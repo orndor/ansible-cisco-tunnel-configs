@@ -8,7 +8,7 @@
       prompt: "Enter the mission number (e.g. WC-1000-19)"
       private: no
     - name: "tunnel_num"
-      prompt: "Enter Tunnel Number (e.g. 96780)"
+      prompt: "Enter Tunnel Number (e.g. 9152)"
       private: no
     - name: "tunnel_ip"
       prompt: "Enter RHN Tunnel IP"
@@ -16,21 +16,23 @@
     - name: "tunnel_mask"
       prompt: "Enter Tunnel Subnet Mask"
       private: no
+    - name: "tunnel_source"
+      prompt: "Enter RHN Tunnel Source Interface IP address"
+      private: no
+    - name: "tunnel_source_mask"
+      prompt: "Enter RHN Tunnel Source Interface Mask"
+      private: no
     - name: "nhrp_auth"
       prompt: "Enter IP NHRP Authentication (e.g. 22196780)"
       private: no
     - name: "nhrp_id"
       prompt: "Enter NHRP ID and Tunnel Key (e.g. 96780)"
       private: no
-    - name: "tunnel_source"
-      prompt: "Enter RHN Tunnel Source Interface (e.g. g4.152)"
-      private: no
   hosts: "me{{ me_num }}"
   tasks:
     - name: "TASK 0: Input Tunnel Config into Router"
       ios_config:
         lines:
-          - "interface Tunnel{{ tunnel_num }}"
           - "description DMVPN Tunnel for {{ mission_num }}"
           - "bandwidth 6144"
           - "ip address {{ tunnel_ip }} {{ tunnel_mask }}"
@@ -59,3 +61,18 @@
           - "tunnel key {{ nhrp_id }}"
           - "tunnel mode gre multipoint"
           - "tunnel protection ipsec profile colorless"
+          - "interface g1.{{ tunnel_num[1:] }}"
+          - "description to TDMA Fabric"
+          - "encapsulation dot1q {{ tunnel_num[1:] }}"
+          - "ip address {{ tunnel_source }} {{ tunnel_source_mask }}"
+          - "service-policy output PMAP_WAN_LW_6M"
+        parents: "interface Tunnel{{ tunnel_num }}"
+    - name: "TASK 1: Input Sub-Interface Config into Router"
+      ios_config:
+        lines:
+          - "description to TDMA Fabric"
+          - "encapsulation dot1q {{ tunnel_num[1:] }}"
+          - "ip address {{ tunnel_source }} {{ tunnel_source_mask }}"
+          - "service-policy output PMAP_WAN_LW_6M"
+        #The "g1." needs to be chnaged to "g4." in production
+        parents: "interface g1.{{ tunnel_num[1:] }}"

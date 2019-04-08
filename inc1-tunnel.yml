@@ -20,10 +20,10 @@
       prompt: "Enter IP NHRP Authentication (e.g. 22196780)"
       private: no
     - name: "nhrp_id"
-      prompt: "Enter NHRP ID and Tunnel Key (e.g 96780)"
+      prompt: "Enter NHRP ID and Tunnel Key (e.g. 96780)"
       private: no
     - name: "tunnel_source"
-      prompt: "Enter RHN Tunnel Source IP"
+      prompt: "Enter RHN Tunnel Source Interface (e.g. g4.152)"
       private: no
   hosts: "me{{ me_num }}"
   tasks:

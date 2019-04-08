@@ -61,11 +61,6 @@
           - "tunnel key {{ nhrp_id }}"
           - "tunnel mode gre multipoint"
           - "tunnel protection ipsec profile colorless"
-          - "interface g1.{{ tunnel_num[1:] }}"
-          - "description to TDMA Fabric"
-          - "encapsulation dot1q {{ tunnel_num[1:] }}"
-          - "ip address {{ tunnel_source }} {{ tunnel_source_mask }}"
-          - "service-policy output PMAP_WAN_LW_6M"
         parents: "interface Tunnel{{ tunnel_num }}"
     - name: "TASK 1: Input Sub-Interface Config into Router"
       ios_config:

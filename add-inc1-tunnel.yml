@@ -69,5 +69,5 @@
           - "encapsulation dot1q {{ tunnel_num[1:] }}"
           - "ip address {{ tunnel_source }} {{ tunnel_source_mask }}"
           - "service-policy output PMAP_WAN_LW_6M"
-        #The "g1." needs to be chnaged to "g4." in production
+        #The "g1." needs to be changed to "g3." in production
         parents: "interface g1.{{ tunnel_num[1:] }}"

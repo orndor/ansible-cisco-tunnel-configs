@@ -1,0 +1,23 @@
+---
+- name: "PLAY 1: Delete an Inc1 Tunnel and sub-int if it is present"
+  vars_prompt:
+    - name: "me_num"
+      prompt: "Enter the ME number (e.g. 2)"
+      private: no
+    - name: "mission_num"
+      prompt: "Enter the mission number (e.g. WC-1000-19)"
+      private: no
+  hosts: "me{{ me_num }}"
+  tasks:
+    - name: "TASK 0: Pull Tunnel Config From Router"
+      ios_command:
+        commands: "show int description | inc {{ mission_num }}"
+      register: "tun_dest"
+    - set_fact:
+        tunnel_num: "{{ tun_dest.stdout[0] }}"
+    - name: "Task 1: Delete tunnel and subint if present"
+      ios_config:
+        lines:
+          - "no interface {{ tunnel_num[:6] }}"
+          - "no interface g1.{{ tunnel_num[3:6] }}"
+      when: "tunnel_num[:2] == 'Tu'"

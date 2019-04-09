@@ -19,5 +19,6 @@
       ios_config:
         lines:
           - "no interface {{ tunnel_num[:6] }}"
+          # This needs chnages to "g3." in production
           - "no interface g1.{{ tunnel_num[3:6] }}"
       when: "tunnel_num[:2] == 'Tu'"

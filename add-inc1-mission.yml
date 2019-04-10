@@ -57,7 +57,7 @@
           - "ospfv3 2 flood-reduction"
           - "ospfv3 2 cost 12400"
           - "ospfv3 2 area 0 ipv4"
-          - "tunnel source {{ tunnel_source }}"
+          - "tunnel source g1.{{ tunnel_num[1:] }}"
           - "tunnel key {{ nhrp_id }}"
           - "tunnel mode gre multipoint"
           - "tunnel protection ipsec profile colorless"

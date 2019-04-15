@@ -58,4 +58,4 @@
 - name: "Role 3: Add configuration to XIMs Switch"
   hosts: "xim{{hostvars['localhost']['ximnum']}}"
   roles:
-    - add-xims-interface-config
+    - add-xims-interface

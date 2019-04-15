@@ -1,0 +1,9 @@
+- name: "Role: Input an Inc1 Subinterface configuration into Router"
+  ios_config:
+    lines:
+      - "description to TDMA Fabric"
+      - "encapsulation dot1q {{ hostvars['localhost']['tunnelnum'][1:] }}"
+      - "ip address {{ hostvars['localhost']['tunnelsource'] }} {{ hostvars['localhost']['tunnelsourcemask'] }}"
+      - "service-policy output PMAP_WAN_LW_6M"
+    #The "g1." needs to be changed to "g3." in production
+    parents: "interface e1/0.{{ hostvars['localhost']['tunnelnum'][1:] }}"

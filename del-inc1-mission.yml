@@ -20,5 +20,5 @@
         lines:
           - "no interface {{ tunnel_num[:6] }}"
           # This needs changed to "g3." in production
-          - "no interface g1.{{ tunnel_num[3:6] }}"
+          - "no interface e0/1.{{ tunnel_num[3:6] }}"
       when: "tunnel_num[:2] == 'Tu'"

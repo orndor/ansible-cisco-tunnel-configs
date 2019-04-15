@@ -1,73 +1,61 @@
 ---
-- name: "PLAY 1: Get all the variables and input a valid tunnel config"
+- name: "PLAY 0: Gather all the required info from the user."
   vars_prompt:
-    - name: "me_num"
+    - name: "menumuser"
       prompt: "Enter the ME number (e.g. 2)"
       private: no
-    - name: "mission_num"
+    - name: "ximnumuser"
+      prompt: "Enter the XIM number (e.g. 2)"
+      private: no
+    - name: "missionnumuser"
       prompt: "Enter the mission number (e.g. WC-1000-19)"
       private: no
-    - name: "tunnel_num"
+    - name: "tunnelnumuser"
       prompt: "Enter Tunnel Number (e.g. 9152)"
       private: no
-    - name: "tunnel_ip"
+    - name: "tunnelipuser"
       prompt: "Enter RHN Tunnel IP"
       private: no
-    - name: "tunnel_mask"
+    - name: "tunnelmaskuser"
       prompt: "Enter Tunnel Subnet Mask"
       private: no
-    - name: "tunnel_source"
+    - name: "tunnelsourceuser"
       prompt: "Enter RHN Tunnel Source Interface IP address"
       private: no
-    - name: "tunnel_source_mask"
+    - name: "tunnelsourcemaskuser"
       prompt: "Enter RHN Tunnel Source Interface Mask"
       private: no
-    - name: "nhrp_auth"
+    - name: "nhrpauthuser"
       prompt: "Enter IP NHRP Authentication (e.g. 22196780)"
       private: no
-    - name: "nhrp_id"
+    - name: "nhrpiduser"
       prompt: "Enter NHRP ID and Tunnel Key (e.g. 96780)"
       private: no
-  hosts: "me{{ me_num }}"
   tasks:
-    - name: "TASK 0: Input Tunnel Config into Router"
-      ios_config:
-        lines:
-          - "description DMVPN Tunnel for {{ mission_num }}"
-          - "bandwidth 6144"
-          - "ip address {{ tunnel_ip }} {{ tunnel_mask }}"
-          - "no ip redirects"
-          - "no ip unreachables"
-          - "ip mtu 1420"
-          - "ip pim nbma-mode"
-          - "ip pim sparse-mode"
-          - "ip nhrp map multicast dynamic"
-          - "ip nhrp authentication {{ nhrp_auth }}"
-          - "ip nhrp network-id {{ nhrp_id }}"
-          - "ip nhrp holdtime 600"
-          - "ipv6 address FC00::{{ tunnel_ip }}/122"
-          - "ipv6 mtu 1420"
-          - "ipv6 nhrp map multicast dynamic"
-          - "ipv6 nhrp authentication {{ nhrp_auth }}"
-          - "ipv6 nhrp network-id {{ nhrp_id }}"
-          - "ipv6 nhrp holdtime 600"
-          - "ip tcp adjust-mss 1332"
-          - "ospfv3 2 network broadcast"
-          - "ospfv3 2 priority 5"
-          - "ospfv3 2 flood-reduction"
-          - "ospfv3 2 cost 12400"
-          - "ospfv3 2 area 0 ipv4"
-          - "tunnel source g1.{{ tunnel_num[1:] }}"
-          - "tunnel key {{ nhrp_id }}"
-          - "tunnel mode gre multipoint"
-          - "tunnel protection ipsec profile colorless"
-        parents: "interface Tunnel{{ tunnel_num }}"
-    - name: "TASK 1: Input Sub-Interface Config into Router"
-      ios_config:
-        lines:
-          - "description to TDMA Fabric"
-          - "encapsulation dot1q {{ tunnel_num[1:] }}"
-          - "ip address {{ tunnel_source }} {{ tunnel_source_mask }}"
-          - "service-policy output PMAP_WAN_LW_6M"
-        #The "g1." needs to be changed to "g3." in production
-        parents: "interface g1.{{ tunnel_num[1:] }}"
+    - set_fact:
+        menum: "{{menumuser}}"
+        ximnum: "{{ximnumuser}}"
+        msnnum: "{{missionnumuser}}"
+        tunnelnum: "{{ tunnelnumuser}}"
+        tunnelip: "{{tunnelipuser}}"
+        tunnelmask: "{{tunnelmaskuser}}"
+        tunnelsource: "{{tunnelsourceuser}}"
+        tunnelsourcemask: "{{tunnelsourcemaskuser}}"
+        nhrpauth: "{{nhrpauthuser}}"
+        nhrpid: "{{nhrpiduser}}"
+  hosts: localhost
+
+- name: "Role 1: Add Inc1 Tunnel Configuration to Router"
+  hosts: "me{{ hostvars['localhost']['menum'] }}"
+  roles:
+    - add-inc1-tunnel
+
+- name: "Role 2: Add Subinterface to Router"
+  hosts: "me{{ hostvars['localhost']['menum'] }}"
+  roles:
+    - add-router-subinterface
+
+- name: "Role 3: Add configuration to XIMs Switch"
+  hosts: "xim{{hostvars['localhost']['ximnum']}}"
+  roles:
+    - add-xims-interface-config

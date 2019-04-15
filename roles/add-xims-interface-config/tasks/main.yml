@@ -1,0 +1,6 @@
+- name: "Role: Input Config into XIMs Switch"
+  ios_config:
+    lines:
+      - "interface e0/{{ hostvars['localhost']['tunnelnum'][3:4] }}"
+      - "switchport access vlan{{ hostvars['localhost']['tunnelnum'][1:] }}"
+      - "no shutdown"
